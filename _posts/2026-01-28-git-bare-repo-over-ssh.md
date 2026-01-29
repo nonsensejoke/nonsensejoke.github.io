@@ -1,3 +1,8 @@
+---
+layout: default
+title: 在 SSH 主机上创建并使用 Git Bare 仓库教程
+---
+
 # 在 SSH 主机上创建并使用 Git Bare 仓库教程
 
 ## 一、什么是 bare 仓库？
