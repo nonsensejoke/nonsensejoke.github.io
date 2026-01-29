@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 页面标题（从 Front Matter 中读取 page.title，没有则用网站 title） -->
+  <title>{{ page.title | default: site.title }}</title>
+
+  <!-- 站点描述（可选）-->
+  <meta name="description" content="{{ page.description | default: site.description }}">
+
+  <!-- 站点 CSS 样式（你可以自定义或者移除） -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <!-- MathJax：支持 LaTeX 公式（块级和行内） -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+</head>
+<body>
+
+  <!-- 顶部导航栏 -->
+  <header>
+    <nav>
+      <a href="{{ '/' | relative_url }}">首页</a>
+      <a href="{{ '/blog/' | relative_url }}">博客</a>
+      {% if site.social %}
+        {% for s in site.social %}
+          <a href="{{ s.url }}">{{ s.name }}</a>
+        {% endfor %}
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- 主体内容 -->
+  <main>
+    {{ content }}
+  </main>
+
+  <!-- 底部信息 -->
+  <footer>
+    <p>&copy; {{ site.time | date: "%Y" }} {{ site.title }}</p>
+  </footer>
+
+</body>
+</html>
+
+
