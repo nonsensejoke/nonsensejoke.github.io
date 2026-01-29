@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: "GitHub 如何只 clone 某个文件夹（Sparse Checkout）"
 date: 2026-01-27
 categories: [git, github]

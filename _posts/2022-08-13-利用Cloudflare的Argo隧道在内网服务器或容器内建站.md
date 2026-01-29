@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: "利用Cloudflare的Argo隧道在内网服务器或容器内建站"
 date: 2022-08-13 10:00:00 +0800
 categories: [Linux, 网络技术]

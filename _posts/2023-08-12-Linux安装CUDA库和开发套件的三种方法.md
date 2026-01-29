@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: "Linux安装CUDA库和开发套件的三种方法"
 date: 2023-08-12 10:00:00 +0800
 categories: [Linux]
