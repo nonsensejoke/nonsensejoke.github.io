@@ -1,5 +1,5 @@
 # 基本站点信息
-title: My Blog
+title: Page
 description: 一个使用 GitHub Pages + Jekyll 的博客
 
 permalink: "/:year-:month-:day/:title/"
