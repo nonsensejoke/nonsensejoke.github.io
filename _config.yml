@@ -2,6 +2,8 @@
 title: My Blog
 description: 一个使用 GitHub Pages + Jekyll 的博客
 
+permalink: "/:year-:month-:day/:title/"
+
 # GitHub Pages 默认使用 kramdown
 markdown: kramdown
 
