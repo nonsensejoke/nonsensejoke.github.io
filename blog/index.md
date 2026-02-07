@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 博客
+title: Nonsense Jokes' Blog
 ---
 
 # 博客文章列表
