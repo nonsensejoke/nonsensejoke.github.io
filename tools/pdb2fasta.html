@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDB → FASTA Extractor</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🧬</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:        #f0f4fa;
+  --bg2:       #e6ecf7;
+  --surface:   #ffffff;
+  --card:      #ffffff;
+  --border:    #d0daea;
+  --border2:   #b8cbe0;
+  --accent:    #1a6fff;
+  --accent-lt: #dce9ff;
+  --accent2:   #0ea580;
+  --accent2-lt:#d0f5ec;
+  --warn:      #e07b00;
+  --warn-lt:   #fff0d8;
+  --danger:    #d93636;
+  --text:      #1a2540;
+  --text2:     #3a4d6e;
+  --muted:     #7a90b0;
+  --mono:      'DM Mono', monospace;
+  --sans:      'Outfit', sans-serif;
+  --shadow:    0 2px 12px rgba(26,111,255,0.08), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(26,111,255,0.12), 0 2px 8px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 0%, rgba(26,111,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 400px at 90% 100%, rgba(14,165,128,0.07) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: radial-gradient(circle, rgba(26,111,255,0.10) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none; z-index: 0;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* ── Resource toolbar ── */
+.resource-bar {
+  position: relative; z-index: 10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 2px;
+  height: 44px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.resource-bar-label {
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.09em;
+  text-transform: uppercase; margin-right: 10px;
+  white-space: nowrap;
+}
+.res-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 6px;
+  text-decoration: none; font-size: 0.76rem; font-weight: 500;
+  color: var(--text2); transition: all 0.14s ease;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.res-link:hover {
+  background: var(--accent-lt);
+  border-color: rgba(26,111,255,0.22);
+  color: var(--accent);
+}
+.res-link .favicon {
+  width: 15px; height: 15px; border-radius: 3px;
+  object-fit: contain; flex-shrink: 0;
+  background: var(--bg); padding: 1px;
+}
+.res-link .emoji { font-size: 13px; line-height: 1; }
+.res-divider { width: 1px; height: 20px; background: var(--border); margin: 0 3px; flex-shrink: 0; }
+.res-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.version-tag {
+  font-size: 0.68rem; font-family: var(--mono);
+  color: var(--muted); background: var(--bg);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 2px 8px;
+}
+.github-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.73rem; color: var(--muted);
+  text-decoration: none; padding: 3px 8px;
+  border-radius: 5px; transition: all 0.13s;
+}
+.github-link:hover { background: var(--bg2); color: var(--text); }
+
+/* ── Layout ── */
+.container {
+  position: relative; z-index: 1;
+  max-width: 920px; margin: 0 auto;
+  padding: 44px 28px 80px;
+}
+
+/* ── Header ── */
+header {
+  display: flex; align-items: flex-start; gap: 18px;
+  margin-bottom: 44px;
+}
+.logo-wrap {
+  width: 58px; height: 58px; flex-shrink: 0;
+  background: linear-gradient(140deg, #1a6fff 0%, #0ea580 100%);
+  border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(26,111,255,0.28), 0 1px 3px rgba(0,0,0,0.1);
+  position: relative; overflow: hidden;
+}
+.logo-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 55%);
+}
+.logo-wrap svg { width: 34px; height: 34px; z-index: 1; position: relative; }
+
+header h1 {
+  font-size: 2.2rem; font-weight: 800;
+  letter-spacing: -0.04em; line-height: 1;
+  color: var(--text);
+}
+header h1 .arrow {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 4px;
+}
+header p {
+  font-size: 0.87rem; color: var(--muted);
+  margin-top: 7px; line-height: 1.6; max-width: 540px;
+}
+.header-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.hbadge {
+  font-size: 0.69rem; font-weight: 600; letter-spacing: 0.04em;
+  padding: 3px 9px; border-radius: 20px; border: 1px solid;
+}
+.hb-blue  { background: var(--accent-lt);  border-color: rgba(26,111,255,0.3);  color: var(--accent); }
+.hb-green { background: var(--accent2-lt); border-color: rgba(14,165,128,0.3); color: #0a8a6a; }
+.hb-warm  { background: var(--warn-lt);    border-color: rgba(224,123,0,0.3);   color: var(--warn); }
+
+/* ── Upload zone ── */
+.upload-zone {
+  border: 2px dashed var(--border2);
+  border-radius: 14px; padding: 40px 24px;
+  text-align: center; cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--surface);
+  box-shadow: var(--shadow); position: relative;
+}
+.upload-zone:hover, .upload-zone.drag {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, #f5f8ff 0%, #f0fcf9 100%);
+  box-shadow: var(--shadow-lg); transform: translateY(-1px);
+}
+.upload-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
+}
+.upload-icon {
+  width: 54px; height: 54px; margin: 0 auto 14px;
+  background: linear-gradient(135deg, var(--accent-lt) 0%, var(--accent2-lt) 100%);
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.7rem;
+  box-shadow: 0 2px 8px rgba(26,111,255,0.12);
+}
+.upload-zone h2 { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+.upload-zone p  { font-size: 0.81rem; color: var(--muted); margin-top: 5px; }
+
+/* ── File list ── */
+#file-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.file-tag {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 9px; padding: 10px 14px;
+  font-family: var(--mono); font-size: 0.8rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  animation: slideIn 0.18s ease;
+}
+@keyframes slideIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
+.file-tag .name  { flex:1; color:var(--text); font-weight:500; }
+.file-tag .size  { color:var(--muted); white-space:nowrap; }
+.file-tag .remove {
+  color:var(--muted); cursor:pointer; padding:2px 7px;
+  border-radius:4px; font-size:.9rem; transition:all .12s;
+}
+.file-tag .remove:hover { color:var(--danger); background:rgba(217,54,54,.08); }
+
+/* ── Options ── */
+.options {
+  display:flex; gap:14px; flex-wrap:wrap;
+  margin-top:18px; align-items:flex-end;
+}
+.opt-group { display:flex; flex-direction:column; gap:5px; }
+.opt-group label {
+  font-size:.71rem; color:var(--muted);
+  font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+}
+.opt-group input, .opt-group select {
+  background:var(--surface); border:1.5px solid var(--border);
+  color:var(--text); font-family:var(--mono); font-size:.84rem;
+  padding:7px 11px; border-radius:7px; outline:none;
+  transition:border-color .15s, box-shadow .15s;
+}
+.opt-group input { width:88px; }
+.opt-group select { width:132px; }
+.opt-group input:focus, .opt-group select:focus {
+  border-color:var(--accent); box-shadow:0 0 0 3px rgba(26,111,255,.12);
+}
+.btn {
+  padding:9px 24px; border:none; border-radius:7px;
+  font-family:var(--sans); font-size:.88rem; font-weight:600;
+  cursor:pointer; transition:all .14s;
+}
+.btn-primary {
+  background:linear-gradient(135deg, var(--accent), #1254d8);
+  color:#fff; box-shadow:0 2px 10px rgba(26,111,255,.35);
+}
+.btn-primary:hover { box-shadow:0 4px 18px rgba(26,111,255,.45); transform:translateY(-1px); }
+.btn-secondary {
+  background:var(--surface); color:var(--accent);
+  border:1.5px solid var(--border2);
+}
+.btn-secondary:hover { border-color:var(--accent); background:var(--accent-lt); }
+.btn:disabled { opacity:.35; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+
+/* ── Stats bar ── */
+#stats-bar {
+  display:flex; background:var(--surface);
+  border:1.5px solid var(--border); border-radius:10px;
+  overflow:hidden; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.stat {
+  display:flex; flex-direction:column; gap:2px;
+  padding:13px 20px; flex:1; text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat:last-child { border-right:none; }
+.stat .label {
+  font-size:.67rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.08em; font-weight:700;
+}
+.stat .value { font-size:1.3rem; font-weight:700; font-family:var(--mono); color:var(--text); }
+.stat .value.ok   { color:var(--accent2); }
+.stat .value.warn { color:var(--warn); }
+
+/* ── Export row ── */
+#export-row { display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+
+/* ── Chain card ── */
+.chain-card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:12px; margin-bottom:14px; overflow:hidden;
+  box-shadow:var(--shadow); animation:fadeUp .25s ease both;
+  transition:box-shadow .2s;
+}
+.chain-card:hover { box-shadow:var(--shadow-lg); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+.chain-header {
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+  padding:11px 16px;
+  background:linear-gradient(90deg, #f4f7ff 0%, #f0fbf7 100%);
+  border-bottom:1.5px solid var(--border);
+}
+.chain-badge {
+  font-family:var(--mono); font-size:.7rem; font-weight:500;
+  padding:3px 9px; border-radius:5px; white-space:nowrap;
+}
+.badge-chain { background:var(--accent); color:#fff; }
+.badge-file  { background:var(--bg); color:var(--text2); border:1px solid var(--border); }
+.badge-amber { background:#fff0d0; color:#a05800; border:1px solid #f0d098; }
+.badge-gap   { background:var(--warn-lt); color:var(--warn); border:1px solid rgba(224,123,0,.25); }
+.chain-meta  { font-size:.79rem; color:var(--muted); flex:1; font-family:var(--mono); }
+.chain-meta .hi { color:var(--accent); font-weight:500; }
+.chain-copy {
+  background:var(--surface); border:1.5px solid var(--border);
+  color:var(--muted); font-family:var(--mono); font-size:.71rem;
+  padding:4px 11px; border-radius:5px; cursor:pointer; transition:all .13s;
+}
+.chain-copy:hover  { border-color:var(--accent); color:var(--accent); background:var(--accent-lt); }
+.chain-copy.copied { border-color:var(--accent2); color:var(--accent2); background:var(--accent2-lt); }
+
+.fasta-block {
+  font-family:var(--mono); font-size:.78rem; line-height:1.78;
+  padding:16px 18px; white-space:pre; overflow-x:auto;
+  background:#fafbfe; color:#4a6080;
+}
+.fasta-header { color:var(--accent2); font-weight:500; }
+.fasta-gap {
+  color:var(--warn); font-weight:700;
+  background:var(--warn-lt); border-radius:2px; padding:0 1px;
+}
+
+/* ── Legend ── */
+.legend {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:10px; padding:18px 20px; margin-top:36px;
+  box-shadow:var(--shadow);
+}
+.legend-title {
+  display:flex; align-items:center; gap:10px;
+  font-size:.7rem; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.09em; margin-bottom:13px;
+}
+.legend-title::before,.legend-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.legend-grid { display:flex; flex-wrap:wrap; gap:7px; }
+.amber-tag {
+  display:inline-flex; align-items:center; gap:5px;
+  background:#fffaf0; border:1px solid #f0d898;
+  border-radius:5px; padding:4px 11px;
+  font-family:var(--mono); font-size:.76rem;
+}
+.amber-tag .code   { color:#b06000; font-weight:700; }
+.amber-tag .arrow  { color:var(--muted); }
+.amber-tag .target { color:var(--accent); font-weight:600; }
+.amber-tag .desc   { color:var(--muted); font-size:.67rem; margin-left:3px; }
+
+/* ── Error ── */
+.error-tag {
+  background:#fff4f4; border:1.5px solid rgba(217,54,54,.22);
+  color:var(--danger); border-radius:8px; padding:12px 16px;
+  font-family:var(--mono); font-size:.82rem;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+/* ── Responsive ── */
+@media (max-width:600px) {
+  .container { padding:24px 16px 60px; }
+  header h1 { font-size:1.7rem; }
+  .resource-bar { padding:0 14px; overflow-x:auto; }
+  .resource-bar-label { display:none; }
+  #stats-bar { flex-wrap:wrap; }
+  .stat { min-width:45%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Resource Toolbar ── -->
+<nav class="resource-bar">
+  <span class="resource-bar-label">外部资源</span>
+
+  <a class="res-link" href="https://www.rcsb.org/" target="_blank" rel="noopener" title="RCSB PDB — Protein Data Bank">
+    <img class="favicon" src="https://www.rcsb.org/favicon.ico" alt="" onerror="this.style.display='none'">
+    RCSB PDB
+  </a>
+
+  <div class="res-divider"></div>
+
+  <a class="res-link" href="https://www.uniprot.org/" target="_blank" rel="noopener" title="UniProt — 蛋白质序列与功能数据库">
+    <img class="favicon" src="https://www.uniprot.org/favicon.ico" alt="" onerror="this.style.display='none'">
+    UniProt
+  </a>
+
+  <div class="res-divider"></div>
+
+  <a class="res-link" href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noopener" title="AlphaFold DB — AI 结构预测数据库">
+    <img class="favicon" src="https://alphafold.ebi.ac.uk/favicon.ico" alt="" onerror="this.style.display='none'">
+    AlphaFold DB
+  </a>
+
+  <div class="res-divider"></div>
+
+  <a class="res-link" href="https://blast.ncbi.nlm.nih.gov/Blast.cgi" target="_blank" rel="noopener" title="NCBI BLAST — 序列同源搜索">
+    <img class="favicon" src="https://www.ncbi.nlm.nih.gov/favicon.ico" alt="" onerror="this.style.display='none'">
+    NCBI BLAST
+  </a>
+
+  <div class="res-divider"></div>
+
+  <a class="res-link" href="https://www.ebi.ac.uk/Tools/msa/clustalo/" target="_blank" rel="noopener" title="Clustal Omega — 多序列比对工具">
+    <span class="emoji">🔗</span>
+    Clustal Omega
+  </a>
+
+  <div class="res-divider"></div>
+
+  <a class="res-link" href="https://ambermd.org/AmberModels.php" target="_blank" rel="noopener" title="AMBER 力场 — 残基命名约定">
+    <span class="emoji">⚗️</span>
+    AMBER FF
+  </a>
+
+  <div class="res-bar-right">
+    <span class="version-tag">v2.0</span>
+  </div>
+</nav>
+
+<!-- ── Main ── -->
+<div class="container">
+
+  <header>
+    <div class="logo-wrap">
+      <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 5 C13 10 21 10 25 15 C29 20 21 20 25 25 C29 30 21 30 25 34" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/>
+        <path d="M25 5 C21 10 13 10 9 15 C5 20 13 20 9 25 C5 30 13 30 9 34" stroke="rgba(255,255,255,0.55)" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="10.5" y1="10.5" x2="23.5" y2="10.5" stroke="white" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+        <line x1="8"    y1="17"   x2="26"   y2="17"   stroke="white" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+        <line x1="10.5" y1="23.5" x2="23.5" y2="23.5" stroke="white" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+    <div>
+      <h1>PDB <span class="arrow">→</span> FASTA</h1>
+      <p>从蛋白质 PDB 文件提取 FASTA 序列 · 支持 AMBER 力场残基命名 · 多链自动拆分 · 缺失残基 Gap 标注</p>
+      <div class="header-badges">
+        <span class="hbadge hb-blue">多链拆分</span>
+        <span class="hbadge hb-green">AMBER 力场</span>
+        <span class="hbadge hb-warm">Gap 检测</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Upload -->
+  <div class="upload-zone" id="drop-zone">
+    <input type="file" id="file-input" accept=".pdb" multiple>
+    <div class="upload-icon">🧬</div>
+    <h2>拖拽 PDB 文件到此处，或点击选择</h2>
+    <p>支持同时上传多个 .pdb 文件 &nbsp;·&nbsp; 纯客户端处理，文件不会上传服务器</p>
+  </div>
+
+  <div id="file-list"></div>
+
+  <!-- Options -->
+  <div class="options">
+    <div class="opt-group">
+      <label>缺失残基符号</label>
+      <input type="text" id="gap-char" value="-" maxlength="1">
+    </div>
+    <div class="opt-group">
+      <label>每行字符数</label>
+      <input type="number" id="line-width" value="60" min="20" max="200">
+    </div>
+    <div class="opt-group">
+      <label>包含 HETATM</label>
+      <select id="include-hetatm">
+        <option value="no">否（仅 ATOM）</option>
+        <option value="yes">是</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" id="run-btn" disabled onclick="runExtraction()">🔍 提取序列</button>
+    <button class="btn btn-secondary" onclick="clearAll()">清空</button>
+  </div>
+
+  <!-- Results -->
+  <div id="results" style="margin-top:32px;"></div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-title">AMBER 力场残基对照表</div>
+    <div class="legend-grid" id="amber-legend"></div>
+  </div>
+
+</div>
+
+<script>
+const AA3TO1 = {
+  ALA:'A',ARG:'R',ASN:'N',ASP:'D',CYS:'C',
+  GLN:'Q',GLU:'E',GLY:'G',HIS:'H',ILE:'I',
+  LEU:'L',LYS:'K',MET:'M',PHE:'F',PRO:'P',
+  SER:'S',THR:'T',TRP:'W',TYR:'Y',VAL:'V',
+  HIE:'H',HID:'H',HIP:'H',
+  ASH:'D',GLH:'E',LYN:'K',CYX:'C',
+  MSE:'M',SEC:'U',PYL:'O',HSD:'H',HSE:'H',HSP:'H',
+};
+const AMBER_META = {
+  HIE:['H','ε-protonated His'],
+  HID:['H','δ-protonated His'],
+  HIP:['H','doubly protonated His'],
+  ASH:['D','protonated Asp'],
+  GLH:['E','protonated Glu'],
+  LYN:['K','neutral Lys'],
+  CYX:['C','disulfide Cys'],
+};
+
+const legendEl = document.getElementById('amber-legend');
+Object.entries(AMBER_META).forEach(([k,[letter,desc]]) => {
+  legendEl.innerHTML += `<span class="amber-tag">
+    <span class="code">${k}</span>
+    <span class="arrow">→</span>
+    <span class="target">${letter}</span>
+    <span class="desc">${desc}</span>
+  </span>`;
+});
+
+let files = [];
+const dropZone  = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const fileList  = document.getElementById('file-list');
+const runBtn    = document.getElementById('run-btn');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag');
+  addFiles([...e.dataTransfer.files]);
+});
+fileInput.addEventListener('change', e => addFiles([...e.target.files]));
+
+function addFiles(newFiles) {
+  newFiles.filter(f => f.name.toLowerCase().endsWith('.pdb')).forEach(f => {
+    if (!files.find(x => x.name === f.name)) files.push(f);
+  });
+  renderFileList();
+}
+function renderFileList() {
+  fileList.innerHTML = '';
+  files.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'file-tag';
+    d.innerHTML = `<span>📄</span>
+      <span class="name">${f.name}</span>
+      <span class="size">${(f.size/1024).toFixed(1)} KB</span>
+      <span class="remove" onclick="removeFile(${i})">✕</span>`;
+    fileList.appendChild(d);
+  });
+  runBtn.disabled = files.length === 0;
+}
+function removeFile(i) { files.splice(i,1); renderFileList(); }
+function clearAll() {
+  files=[]; renderFileList();
+  document.getElementById('results').innerHTML='';
+  fileInput.value='';
+}
+
+function parsePDB(text, inclHET) {
+  const chains = {};
+  for (const line of text.split('\n')) {
+    const rec = line.slice(0,6).trim();
+    if (rec !== 'ATOM' && !(inclHET && rec === 'HETATM')) continue;
+    const resname = line.slice(17,20).trim();
+    if (!AA3TO1[resname]) continue;
+    const chainId = line[21] || ' ';
+    const resseq  = parseInt(line.slice(22,26), 10);
+    if (isNaN(resseq)) continue;
+    const icode = line[26] || ' ';
+    const key   = `${resseq}|${icode}`;
+    if (!chains[chainId]) chains[chainId] = {};
+    if (!chains[chainId][key]) chains[chainId][key] = {resseq,icode,resname};
+  }
+  const result = {};
+  for (const [ch,res] of Object.entries(chains)) {
+    result[ch] = Object.values(res).sort((a,b) =>
+      a.resseq - b.resseq || a.icode.localeCompare(b.icode));
+  }
+  return result;
+}
+
+function buildSequence(residues, gc='-') {
+  let seq='', prev=null;
+  for (const {resseq,icode,resname} of residues) {
+    const letter = AA3TO1[resname]||'X';
+    if (prev !== null) {
+      const gap = resseq-(prev+1);
+      if (gap>0 && icode.trim()==='') seq += gc.repeat(gap);
+    }
+    seq += letter; prev = resseq;
+  }
+  return seq;
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function colorSeq(seq,gc){
+  let out='';
+  for(const ch of seq)
+    out += ch===gc?`<span class="fasta-gap">${esc(ch)}</span>`:esc(ch);
+  return out;
+}
+function formatFasta(header,seq,width,gc){
+  let html=`<span class="fasta-header">&gt;${esc(header)}</span>\n`;
+  for(let i=0;i<seq.length;i+=width)
+    html += colorSeq(seq.slice(i,i+width),gc)+'\n';
+  return html;
+}
+
+async function runExtraction() {
+  const gc      = document.getElementById('gap-char').value||'-';
+  const width   = parseInt(document.getElementById('line-width').value)||60;
+  const inclHET = document.getElementById('include-hetatm').value==='yes';
+  const resultsEl = document.getElementById('results');
+  resultsEl.innerHTML='';
+
+  let allFasta='', totalChains=0, totalRes=0, totalGaps=0;
+  const cards=[];
+
+  for(const file of files){
+    const text   = await file.text();
+    const chains = parsePDB(text,inclHET);
+    const stem   = file.name.replace(/\.pdb$/i,'');
+
+    for(const chainId of Object.keys(chains).sort()){
+      const residues   = chains[chainId];
+      const seq        = buildSequence(residues,gc);
+      const gaps       = (seq.match(new RegExp('\\'+gc,'g'))||[]).length;
+      const aaCount    = seq.length-gaps;
+      const start      = residues[0].resseq;
+      const end        = residues[residues.length-1].resseq;
+      const amberFound = [...new Set(residues.map(r=>r.resname).filter(n=>AMBER_META[n]))];
+      const header     = `${stem}_chain${chainId} | residues ${start}-${end} | ${aaCount} aa${gaps?` | ${gaps} missing`:''}`;
+      const fastaText  = `>${header}\n`+(seq.match(new RegExp(`.{1,${width}}`,'g'))||[]).join('\n');
+      allFasta += fastaText+'\n\n';
+      totalChains++; totalRes+=aaCount; totalGaps+=gaps;
+      cards.push({header,seq,gaps,aaCount,start,end,gc,width,fastaText,amberFound,chainId,stem});
+    }
+  }
+
+  if(!totalChains){
+    resultsEl.innerHTML='<div class="error-tag">⚠ 未找到氨基酸残基，请检查 PDB 文件格式。</div>';
+    return;
+  }
+
+  const statsHtml=`<div id="stats-bar">
+    <div class="stat"><span class="label">文件数</span><span class="value">${files.length}</span></div>
+    <div class="stat"><span class="label">链数</span><span class="value">${totalChains}</span></div>
+    <div class="stat"><span class="label">残基总数</span><span class="value">${totalRes.toLocaleString()}</span></div>
+    <div class="stat"><span class="label">缺失残基</span><span class="value ${totalGaps?'warn':'ok'}">${totalGaps}</span></div>
+  </div>`;
+
+  const exportHtml=`<div id="export-row">
+    <button class="btn btn-primary" onclick="downloadAll()">⬇ 下载全部 .fasta</button>
+    <button class="btn btn-secondary" onclick="copyAll()">📋 复制全部</button>
+  </div>`;
+
+  let cardsHtml='';
+  cards.forEach((c,idx)=>{
+    const amberB = c.amberFound.length
+      ?`<span class="chain-badge badge-amber">AMBER: ${c.amberFound.join(' ')}</span>`:'';
+    const gapB = c.gaps
+      ?`<span class="chain-badge badge-gap">⚠ ${c.gaps} missing</span>`:'';
+    cardsHtml+=`
+    <div class="chain-card" style="animation-delay:${idx*.05}s">
+      <div class="chain-header">
+        <span class="chain-badge badge-chain">Chain ${esc(c.chainId)}</span>
+        <span class="chain-badge badge-file">${esc(c.stem)}</span>
+        ${amberB}${gapB}
+        <span class="chain-meta">
+          residues <span class="hi">${c.start}–${c.end}</span>
+          &nbsp;·&nbsp;<span class="hi">${c.aaCount}</span> aa
+        </span>
+        <button class="chain-copy" onclick="copyChain(this,${idx})">复制</button>
+      </div>
+      <div class="fasta-block">${formatFasta(c.header,c.seq,c.width,c.gc)}</div>
+    </div>`;
+  });
+
+  resultsEl.innerHTML = statsHtml+exportHtml+cardsHtml;
+  window._allFasta = allFasta.trim();
+  window._cards    = cards;
+}
+
+function copyChain(btn,idx){
+  navigator.clipboard.writeText(window._cards[idx].fastaText).then(()=>{
+    btn.textContent='已复制 ✓'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='复制';btn.classList.remove('copied');},2000);
+  });
+}
+function copyAll(){
+  navigator.clipboard.writeText(window._allFasta).then(()=>alert('已复制全部序列 ✓'));
+}
+function downloadAll(){
+  const blob=new Blob([window._allFasta+'\n'],{type:'text/plain'});
+  const a=Object.assign(document.createElement('a'),
+    {href:URL.createObjectURL(blob),download:'sequences.fasta'});
+  a.click(); URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
