@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "🐳 Apptainer 编译镜像时 home 空间不足怎么办"
-date: 2026-05-07 14:00:00 +0800
+date: 2026-05-07 00:00:00 +0800
 categories: [Linux, HPC]
 tags: [apptainer, singularity, hpc, linux, container]
 description: "通过环境变量将 Apptainer 的缓存和临时目录重定向到空间充足的挂载盘，解决 home 分区不足的问题。"
