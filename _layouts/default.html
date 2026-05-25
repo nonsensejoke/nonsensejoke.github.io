@@ -46,13 +46,19 @@
 </head>
 <body>
 
+  <!-- 新增：只在文章页显示"返回目录"按钮 -->
+  {% if page.date %}
+  <div style="margin-bottom: 1.5em;">
+    <a href="/blog/" style="display:inline-block; padding: 0.3em 0.8em; border: 1px solid #999; border-radius: 4px; text-decoration: none; font-size: 0.9em; color: #555;">
+      &larr; 返回目录
+    </a>
+  </div>
+  {% endif %}
+
   <!-- 主体内容由 Jekyll 注入 -->
   {{ content }}
 
 
- 
 
 </body>
 </html>
-
-
