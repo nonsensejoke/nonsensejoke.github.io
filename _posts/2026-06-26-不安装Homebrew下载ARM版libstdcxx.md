@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "不安装 Homebrew 下载 ARM 版 libstdc++.6.dylib"
-date: 2026-06-26 12:00:00 +0800
+date: 2026-06-25 12:00:00 +0800
 categories: [macOS, 工具]
 tags: [macos, arm64, gcc, homebrew, dylib]
 description: "在 Apple Silicon Mac 上不安装 Homebrew，直接从 GHCR 下载 GCC bottle 提取 libstdc++.6.dylib 的完整方法。"
