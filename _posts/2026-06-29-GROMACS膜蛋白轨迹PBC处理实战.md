@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "GROMACS 膜蛋白轨迹 PBC 处理实战：让蛋白聚拢、膜不散开"
-date: 2026-06-29 12:00:00 +0800
+date: 2026-06-28 12:00:00 +0800
 categories: [分子动力学, 工具]
 tags: [gromacs, trjconv, pbc, membrane-protein, md]
 description: "针对多链膜蛋白复合物的 xtc 轨迹，记录用 trjconv 解决一条链跑很远、膜散开等 PBC 赝象的完整三步流程，以及 -n 选项的辨析。"
