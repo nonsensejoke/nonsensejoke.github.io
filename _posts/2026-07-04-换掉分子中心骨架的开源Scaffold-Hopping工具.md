@@ -482,45 +482,45 @@ SwissBioisostere + RDKit + ChemBounce + 3D shape/pharmacophore 复筛
 
 > 全文引用统一为连续编号 `[1]–[39]`，重复的文献（如 ChemBounce 论文、REINVENT4 论文/仓库等）已合并。
 
-[1] ChemBounce: a computational framework for scaffold hopping in drug discovery. URL: https://academic.oup.com/bioinformatics/article/41/9/btaf501/8251522
-[2] ChemBounce GitHub repository. URL: https://github.com/jyryu3161/chembounce
-[3] ChemBounce README: scaffold fingerprint database notes. URL: https://github.com/jyryu3161/chembounce/blob/main/README.md
-[4] ChemBounce Colab notebook. URL: https://colab.research.google.com/github/jyryu3161/chembounce/blob/main/chembounce_colab.ipynb
-[5] Expasy / SIB: SwissBioisostere resource page. URL: https://www.expasy.org/resources/swissbioisostere
-[6] SwissBioisostere official website. URL: https://www.swissbioisostere.ch/
-[7] SwissBioisostere 2021: updated structural, bioactivity and physicochemical data. URL: https://academic.oup.com/nar/article/50/D1/D1382/6426059
-[8] SwissBioisostere Tutorial 4: replacement of linkers and scaffolds; side chain/linker/scaffold R-group definitions. URL: https://www.swissbioisostere.ch/tutorials.html
-[9] RDKit overview documentation. URL: https://www.rdkit.org/docs/Overview.html
-[10] RDKit `rdkit.Chem.rdmolops` API documentation: `ReplaceCore`, `ReplaceSidechains`, `ReplaceSubstructs`. URL: https://www.rdkit.org/docs/source/rdkit.Chem.rdmolops.html
-[11] RDKit R-group decomposition documentation. URL: https://www.rdkit.org/docs/source/rdkit.Chem.rdRGroupDecomposition.html
-[12] RDKit blog: R-group decomposition and molzip. URL: https://greglandrum.github.io/rdkit-blog/posts/2022-03-14-rgd-and-molzip.html
-[13] RDKit blog: R-group decomposition tutorial. URL: https://greglandrum.github.io/rdkit-blog/posts/2023-01-09-rgd-tutorial.html
-[14] RDKit shape alignment API documentation. URL: https://www.rdkit.org/docs/source/rdkit.Chem.rdShapeAlign.html
-[15] Reinvent 4: Modern AI-driven generative molecule design. URL: https://link.springer.com/article/10.1186/s13321-024-00812-5
-[16] REINVENT4 GitHub repository. URL: https://github.com/MolecularAI/REINVENT4
-[17] DeLinker scaffold hopping notebook. URL: https://github.com/fimrie/DeLinker/blob/master/examples/DeLinker_scaffold_hopping.ipynb
-[18] DeLinker on bio.tools. URL: https://bio.tools/delinker
-[19] DiffLinker GitHub repository. URL: https://github.com/igashov/DiffLinker
-[20] DiffLinker paper in Nature Machine Intelligence. URL: https://www.nature.com/articles/s42256-024-00815-9
-[21] SyntaLinker paper. URL: https://pubs.rsc.org/sc/article/11/31/8312/705774/SyntaLinker-automatic-fragment-linking-with-deep
-[22] DiffHopp: A Graph Diffusion Model for Novel Drug Design via Scaffold Hopping. URL: https://arxiv.org/abs/2308.07416
-[23] DiffHopp GitHub repository. URL: https://github.com/jostorge/diffusion-hopping
-[24] Deep scaffold hopping with multimodal transformer neural networks (DeepHop). Zheng S, et al. J. Cheminform. 2021;13(1):87. URL: https://jcheminf.biomedcentral.com/articles/10.1186/s13321-021-00565-5
-[25] mmpdb on PyPI. URL: https://pypi.org/project/mmpdb/
-[26] mmpdb GitHub repository. URL: https://github.com/rdkit/mmpdb
-[27] ScaffoldGraph paper in Bioinformatics. URL: https://academic.oup.com/bioinformatics/article/36/12/3930/5814205
-[28] ScaffoldGraph GitHub repository. URL: https://github.com/UCLCheminformatics/ScaffoldGraph
-[29] SwissSimilarity on Expasy. URL: https://www.expasy.org/resources/swisssimilarity
-[30] The SwissSimilarity 2021 Web Tool. URL: https://www.mdpi.com/1422-0067/23/2/811
-[31] DataWarrior official site. URL: https://openmolecules.org/datawarrior/
-[32] RDKit Nodes for KNIME. URL: https://www.knime.com/rdkit
-[33] ZINCPharmer paper in Nucleic Acids Research. URL: https://academic.oup.com/nar/article/40/W1/W409/1072552
-[34] ZINCPharmer on bio.tools. URL: https://bio.tools/zincpharmer
-[35] Shape-it GitHub repository. URL: https://github.com/rdkit/shape-it
-[36] USRCAT paper. URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC3505738/
-[37] OpenPharmacophore GitHub repository. URL: https://github.com/uibcdf/OpenPharmacophore
-[38] Cresset Spark (field-based scaffold hopping / bioisosteric replacement，商业软件). URL: https://www.cresset-group.com/software/spark/
-[39] OpenEye BROOD (fragment replacement，商业软件). URL: https://www.eyesopen.com/brood
+- [1] ChemBounce: a computational framework for scaffold hopping in drug discovery. URL: https://academic.oup.com/bioinformatics/article/41/9/btaf501/8251522
+- [2] ChemBounce GitHub repository. URL: https://github.com/jyryu3161/chembounce
+- [3] ChemBounce README: scaffold fingerprint database notes. URL: https://github.com/jyryu3161/chembounce/blob/main/README.md
+- [4] ChemBounce Colab notebook. URL: https://colab.research.google.com/github/jyryu3161/chembounce/blob/main/chembounce_colab.ipynb
+- [5] Expasy / SIB: SwissBioisostere resource page. URL: https://www.expasy.org/resources/swissbioisostere
+- [6] SwissBioisostere official website. URL: https://www.swissbioisostere.ch/
+- [7] SwissBioisostere 2021: updated structural, bioactivity and physicochemical data. URL: https://academic.oup.com/nar/article/50/D1/D1382/6426059
+- [8] SwissBioisostere Tutorial 4: replacement of linkers and scaffolds; side chain/linker/scaffold R-group definitions. URL: https://www.swissbioisostere.ch/tutorials.html
+- [9] RDKit overview documentation. URL: https://www.rdkit.org/docs/Overview.html
+- [10] RDKit `rdkit.Chem.rdmolops` API documentation: `ReplaceCore`, `ReplaceSidechains`, `ReplaceSubstructs`. URL: https://www.rdkit.org/docs/source/rdkit.Chem.rdmolops.html
+- [11] RDKit R-group decomposition documentation. URL: https://www.rdkit.org/docs/source/rdkit.Chem.rdRGroupDecomposition.html
+- [12] RDKit blog: R-group decomposition and molzip. URL: https://greglandrum.github.io/rdkit-blog/posts/2022-03-14-rgd-and-molzip.html
+- [13] RDKit blog: R-group decomposition tutorial. URL: https://greglandrum.github.io/rdkit-blog/posts/2023-01-09-rgd-tutorial.html
+- [14] RDKit shape alignment API documentation. URL: https://www.rdkit.org/docs/source/rdkit.Chem.rdShapeAlign.html
+- [15] Reinvent 4: Modern AI-driven generative molecule design. URL: https://link.springer.com/article/10.1186/s13321-024-00812-5
+- [16] REINVENT4 GitHub repository. URL: https://github.com/MolecularAI/REINVENT4
+- [17] DeLinker scaffold hopping notebook. URL: https://github.com/fimrie/DeLinker/blob/master/examples/DeLinker_scaffold_hopping.ipynb
+- [18] DeLinker on bio.tools. URL: https://bio.tools/delinker
+- [19] DiffLinker GitHub repository. URL: https://github.com/igashov/DiffLinker
+- [20] DiffLinker paper in Nature Machine Intelligence. URL: https://www.nature.com/articles/s42256-024-00815-9
+- [21] SyntaLinker paper. URL: https://pubs.rsc.org/sc/article/11/31/8312/705774/SyntaLinker-automatic-fragment-linking-with-deep
+- [22] DiffHopp: A Graph Diffusion Model for Novel Drug Design via Scaffold Hopping. URL: https://arxiv.org/abs/2308.07416
+- [23] DiffHopp GitHub repository. URL: https://github.com/jostorge/diffusion-hopping
+- [24] Deep scaffold hopping with multimodal transformer neural networks (DeepHop). Zheng S, et al. J. Cheminform. 2021;13(1):87. URL: https://jcheminf.biomedcentral.com/articles/10.1186/s13321-021-00565-5
+- [25] mmpdb on PyPI. URL: https://pypi.org/project/mmpdb/
+- [26] mmpdb GitHub repository. URL: https://github.com/rdkit/mmpdb
+- [27] ScaffoldGraph paper in Bioinformatics. URL: https://academic.oup.com/bioinformatics/article/36/12/3930/5814205
+- [28] ScaffoldGraph GitHub repository. URL: https://github.com/UCLCheminformatics/ScaffoldGraph
+- [29] SwissSimilarity on Expasy. URL: https://www.expasy.org/resources/swisssimilarity
+- [30] The SwissSimilarity 2021 Web Tool. URL: https://www.mdpi.com/1422-0067/23/2/811
+- [31] DataWarrior official site. URL: https://openmolecules.org/datawarrior/
+- [32] RDKit Nodes for KNIME. URL: https://www.knime.com/rdkit
+- [33] ZINCPharmer paper in Nucleic Acids Research. URL: https://academic.oup.com/nar/article/40/W1/W409/1072552
+- [34] ZINCPharmer on bio.tools. URL: https://bio.tools/zincpharmer
+- [35] Shape-it GitHub repository. URL: https://github.com/rdkit/shape-it
+- [36] USRCAT paper. URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC3505738/
+- [37] OpenPharmacophore GitHub repository. URL: https://github.com/uibcdf/OpenPharmacophore
+- [38] Cresset Spark (field-based scaffold hopping / bioisosteric replacement，商业软件). URL: https://www.cresset-group.com/software/spark/
+- [39] OpenEye BROOD (fragment replacement，商业软件). URL: https://www.eyesopen.com/brood
 
 ---
 
