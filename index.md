@@ -5,3 +5,5 @@ Hello World!
 🔧 [PDB to FASTA Tool](tools/pdb2fasta.html)
 
 📳 [molecule resonance analysis](https://resonance-web-service-production.up.railway.app/)
+
+📏 [OpenAI API Usage](https://openai-api-usage-production.up.railway.app/)
