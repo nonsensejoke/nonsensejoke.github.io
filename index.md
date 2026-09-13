@@ -6,4 +6,4 @@ Hello World!
 
 📳 [molecule resonance analysis](https://resonance-web-service-production.up.railway.app/)
 
-📏 [OpenAI API Usage](https://openai-api-usage-production.up.railway.app/)
+📏 [OpenAI API Usage](https://openai-api-usage.bccg.edu.eu.org/)
