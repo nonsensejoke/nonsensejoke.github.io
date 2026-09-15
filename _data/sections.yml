@@ -1,0 +1,57 @@
+# 博客目录页的手动分组配置
+#
+# 用法：
+#   - name: 显示在页面上的 section 标题
+#     id:   HTML 锚点 id（只用 ASCII 字母/数字/连字符）
+#     posts: 文章列表，写 _posts/ 下去掉 .md 的文件名
+#
+# 说明：
+#   - section 的顺序 = 页面上的顺序；section 内文章的顺序 = 你在这里写的顺序
+#   - 文件名里有空格的，要用引号包起来
+#   - 新文章如果忘了加进来，会自动出现在目录页底部的「未分类」里
+
+- name: Linux 与 HPC
+  id: linux
+  posts:
+    - 2026-09-09-Miniconda把缓存和临时目录重定向到本地盘
+    - 2026-07-24-Linux下调整CPU频率策略
+    - 2026-07-04-Linux下如何安全卸载USB-SSD
+    - 2026-06-26-不安装Homebrew下载ARM版libstdcxx
+    - 2026-05-07-Apptainer编译镜像时重定向缓存目录到其他磁盘
+    - 2023-08-12-Linux安装CUDA库和开发套件的三种方法
+
+- name: 计算化学与结构生物学
+  id: compchem
+  posts:
+    - 2026-09-11-MHC-Class-I-II-HLA-Allele
+    - 2026-07-16-用键长判断非环键的键级参考表
+    - 2026-07-15-给cofolding的mmCIF模型补上配体键级和蛋白配体成键
+    - 2026-07-04-换掉分子中心骨架的开源Scaffold-Hopping工具
+    - 2026-07-03-用VirtualGL在本地运行远程SSH服务器上的PyMOL界面
+    - 2026-06-29-GROMACS膜蛋白轨迹PBC处理实战
+
+- name: AI 与机器学习
+  id: ai
+  posts:
+    - 2026-08-03-从AE到FSQ-潜变量离散化与视觉Tokenizer的技术演化
+    - 2026-05-07-在Claude-Desktop中连接GitHub-MCP
+    - 2026-05-07-在Claude-Desktop中配置TinyFish-MCP
+    - 2026-01-26-突破概率1的上限
+
+- name: 终端与效率工具
+  id: terminal
+  posts:
+    - 2026-07-24-ASCII控制字符速查表
+    - 2026-01-25-Yazi终端文件管理器快捷键速查表
+
+- name: Git 与开发
+  id: git
+  posts:
+    - "2026-01-28-在 SSH 主机上创建并使用 Git Bare 仓库教程"
+    - 2026-01-27-github如何clone单个目录
+
+- name: 网络
+  id: network
+  posts:
+    - 2022-08-13-利用Cloudflare的Argo隧道在内网服务器或容器内建站
+    - 2016-01-30-双路由两网段互访配置
