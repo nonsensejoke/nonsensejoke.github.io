@@ -13,6 +13,7 @@
 - name: Linux 与 HPC
   id: linux
   posts:
+    - 2026-09-21-Linux下海量文件目录的高效打包压缩-tar与zstd
     - 2026-09-09-Miniconda把缓存和临时目录重定向到本地盘
     - 2026-07-24-Linux下调整CPU频率策略
     - 2026-07-04-Linux下如何安全卸载USB-SSD
