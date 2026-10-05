@@ -24,6 +24,7 @@
 - name: 计算化学与结构生物学
   id: compchem
   posts:
+    - 2026-10-05-从头推导Hartree-Fock与Kohn-Sham-DFT
     - 2026-09-11-MHC-Class-I-II-HLA-Allele
     - 2026-07-16-用键长判断非环键的键级参考表
     - 2026-07-15-给cofolding的mmCIF模型补上配体键级和蛋白配体成键
