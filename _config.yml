@@ -9,6 +9,8 @@ markdown: kramdown
 
 # 时间设置
 timezone: Asia/Shanghai
+# 日期在未来的文章也照常生成（避免 frontmatter 时间晚于提交时刻导致文章不出现）
+future: true
 
 # 配置 MathJax 渲染公式（如果需要）
 kramdown:
