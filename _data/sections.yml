@@ -36,6 +36,7 @@
 - name: AI 与机器学习
   id: ai
   posts:
+    - 2026-10-27-计算化学与神经网络研究者的数学地图
     - 2026-08-03-从AE到FSQ-潜变量离散化与视觉Tokenizer的技术演化
     - 2026-05-07-在Claude-Desktop中连接GitHub-MCP
     - 2026-05-07-在Claude-Desktop中配置TinyFish-MCP
