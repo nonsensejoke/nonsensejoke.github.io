@@ -4,6 +4,8 @@ Hello World!
 
 🔧 [PDB to FASTA Tool](tools/pdb2fasta.html)
 
+⌨️ [韩文输入键盘](/tools/korean-keyboard/)
+
 📳 [molecule resonance analysis](https://resonance-analysis.bccg.edu.eu.org)
 
 📏 [OpenAI API Usage](https://openai-api-usage.bccg.edu.eu.org/)
